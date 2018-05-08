@@ -360,14 +360,17 @@ static void DIB_GenerateMouseMotionEvent(_THIS)
 void DIB_PumpEvents(_THIS)
 {
 	MSG msg;
-
+	BOOL bMouseMoved = FALSE;
 	while ( PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) ) {
 		if ( GetMessage(&msg, NULL, 0, 0) > 0 ) {
+			if (msg.message == WM_MOUSEMOVE) {
+				bMouseMoved = TRUE;
+			}
 			DispatchMessage(&msg);
 		}
 	}
 
-	if ( SDL_GetAppState() & SDL_APPMOUSEFOCUS ) {
+	if (bMouseMoved && (SDL_GetAppState() & SDL_APPMOUSEFOCUS) ) {
 		DIB_GenerateMouseMotionEvent( this );
 	}
 }
